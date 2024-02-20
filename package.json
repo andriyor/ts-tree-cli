@@ -1,0 +1,32 @@
+{
+  "name": "@andriyorehov/ts-tree-cli",
+  "version": "0.0.1",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@andriyorehov/ts-graph": "^0.0.4",
+    "lodash": "^4.17.21",
+    "lz-string": "^1.5.0",
+    "open": "^10.0.3"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.202",
+    "@types/node": "^20.11.19",
+    "type-flag": "^3.0.0",
+    "typescript": "^5.3.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://github.com/andriyor/ts-tree-cli#readme",
+  "repository": "github:andriyor/ts-tree-cli",
+  "files": [
+    "/build"
+  ]
+}
