@@ -2,20 +2,24 @@
 
 This CLI uses [ts-tree](https://github.com/andriyor/ts-tree) to get file tree and [coverage-tree](https://github.com/andriyor/coverage-tree-next) to show result on web
 
-## Usage
+## Installation
 
-### CLI
+```shell
+npm i -g @andriyorehov/ts-tree-cli
+```
+
+## Usage
 
 Process coverage and save to file
 
 ```shell
-tsx src/index.ts -f='pathToComponent.tsx' -c='projectDir/coverage-summary.json' -p -o='tree.json'
+ts-tree -f='pathToComponent.tsx' -c='projectDir/coverage-summary.json' -p -o='tree.json'
 ```
 
 Open coverage tree on browser
 
 ```shell
-tsx src/index.ts -f='pathToComponent.tsx' -c='projectDir/coverage-summary.json' -w
+ts-tree -f='pathToComponent.tsx' -c='projectDir/coverage-summary.json' -w
 ```
 
 ## TODO
@@ -35,7 +39,6 @@ tsx src/index.ts -f='pathToComponent.tsx' -c='projectDir/coverage-summary.json' 
 ❌ --help option
 
 ❌ fix typings in coverage processing
-
 
 ## Tech Debt
 
