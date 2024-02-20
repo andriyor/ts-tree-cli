@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@andriyorehov/ts-graph':
-    specifier: ^0.0.5
-    version: 0.0.5
+    specifier: ^0.0.6
+    version: 0.0.6
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
@@ -34,8 +34,8 @@ devDependencies:
 
 packages:
 
-  /@andriyorehov/ts-graph@0.0.5:
-    resolution: {integrity: sha512-Ud60V0bfvCy9pDVdm9LJs2yA8OXD3zwpkRYWeyN38xlFDrqUB2S2gH49S0EPQcxJlLGHKwuhQEdzQhEpbTTzOQ==}
+  /@andriyorehov/ts-graph@0.0.6:
+    resolution: {integrity: sha512-NzBNnLsswQhFklAZPP8zm3INpNdvtdJSpM/Xm1H0DIxDJRIk168++xaf4Ap0sVRsS404ghMLVnqK14biQCZ68Q==}
     dependencies:
       find-up: 5.0.0
       ts-morph: 21.0.1
