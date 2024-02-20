@@ -28,6 +28,8 @@ tsx src/index.ts -f='pathToComponent.tsx' -c='projectDir/coverage-summary.json' 
 
 ✅ open result on web app
 
+❌ fix build `const open_1 = __importDefault(require("open") Error [ERR_REQUIRE_ESM]: require() of ES Module`
+
 ❌ publish package
 
 ❌ better CLI handling
