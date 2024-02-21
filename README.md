@@ -16,7 +16,7 @@ Process coverage and save to file
 ts-tree -f='pathToComponent.tsx' -c='projectDir/coverage-summary.json' -p -o='tree.json'
 ```
 
-Open coverage tree on browser
+Open coverage tree on browser (works only if URL is less then 14 KB [URL_TOO_LONG](https://vercel.com/docs/errors/URL_TOO_LONG))
 
 ```shell
 ts-tree -f='pathToComponent.tsx' -c='projectDir/coverage-summary.json' -w
