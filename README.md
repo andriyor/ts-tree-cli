@@ -32,7 +32,7 @@ ts-tree -f='pathToComponent.tsx' -c='projectDir/coverage-summary.json' -w
 
 ✅ open result on web app
 
-❌ publish package
+✅ publish package
 
 ❌ better CLI handling
 
