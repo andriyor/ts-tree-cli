@@ -60,7 +60,7 @@ if (parsed.flags.file && parsed.flags.outputFile && parsed.flags.coverageFile &&
 } else if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.web) {
   const coverage = JSON.parse(fs.readFileSync(parsed.flags.coverageFile, 'utf-8'));
   const tree = getTreeByFile(parsed.flags.file, coverage);
-  const url = `${getURlFromTree(tree)}&mode=coverageTree`;
+  const url = getURlFromTree(tree);
   open(url);
 } else if (parsed.flags.file && parsed.flags.coverageFile) {
   const coverage = JSON.parse(fs.readFileSync(parsed.flags.coverageFile, 'utf-8'));
