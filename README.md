@@ -22,6 +22,23 @@ Open coverage tree on browser (works only if URL is less then 14 KB [URL_TOO_LON
 ts-tree -f='pathToComponent.tsx' -c='projectDir/coverage-summary.json' -w
 ```
 
+## Example config
+
+```json
+[
+  {
+    "file": "src/pages/reports/index.page.tsx",
+    "threshold": 90
+  },
+  {
+    "file": "src/pages/settings/index.page.tsx",
+    "threshold": 80
+  }
+]
+
+```
+
+
 ## TODO
 
 ✅ save result to file
@@ -36,11 +53,11 @@ ts-tree -f='pathToComponent.tsx' -c='projectDir/coverage-summary.json' -w
 
 ✅ output by threshold in console
 
+✅ config with file entries
+
 ❌ output by tree threshold in console
 
 ❌ colorized output
-
-❌ config with file entries
 
 ❌ better CLI handling
 

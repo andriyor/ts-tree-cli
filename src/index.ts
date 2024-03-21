@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import { typeFlag } from 'type-flag';
 import lzString from "lz-string";
 import open from 'open';
+import pc from "picocolors"
 import { getTreeByFile } from '@andriyorehov/ts-graph';
 
 import { Coverage, processCoverage, processFlatCoverage } from './helper';
@@ -94,5 +95,24 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
   const tree = getTreeByFile(parsed.flags.file).flatTree;
   console.dir(tree, { depth: null });
 } else {
-  console.log('provide required --file option');
+  const config = JSON.parse(fs.readFileSync('tree-cov.json', 'utf-8'))
+  const coverage = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf-8'));
+  for (const configItem of config) {
+    const tree = getTreeByFile(configItem.file, coverage);
+    const processedTree = processFlatCoverage(tree.flatTree);
+    if (configItem.threshold && processedTree.lines.pct <= configItem.threshold) {
+      console.log(pc.bold(pc.red(`Root entry ${configItem.file}: coverage threshold for lines (${configItem.threshold}%) not met: ${processedTree.lines.pct}%`)));
+    } else {
+      console.log(pc.bold(pc.green(`Root entry ${configItem.file}: coverage threshold for lines (${configItem.threshold}%) met: ${processedTree.lines.pct}%`)));
+    }
+    for (const treeProperty in tree.flatTree) {
+      const meta = tree.flatTree[treeProperty].meta as Coverage;
+      if (meta.lines.pct <= 50) {
+        console.log(
+          pc.red(`${treeProperty} ${meta.lines.pct}% lines ${meta.lines.total}/${meta.lines.covered}`)
+        )
+      }
+    }
+    console.log('');
+  }
 }
