@@ -14,16 +14,16 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@andriyorehov/ts-graph": "^0.0.7",
+    "@andriyorehov/ts-graph": "^1.0.0",
     "lodash": "^4.17.21",
     "lz-string": "^1.5.0",
     "open": "^8.4.2"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.202",
-    "@types/node": "^20.11.25",
+    "@types/lodash": "^4.17.0",
+    "@types/node": "^20.11.30",
     "type-flag": "^3.0.0",
-    "typescript": "^5.4.2"
+    "typescript": "^5.4.3"
   },
   "publishConfig": {
     "access": "public"

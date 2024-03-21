@@ -34,6 +34,14 @@ ts-tree -f='pathToComponent.tsx' -c='projectDir/coverage-summary.json' -w
 
 ✅ publish package
 
+✅ output by threshold in console
+
+❌ output by tree threshold in console
+
+❌ colorized output
+
+❌ config with file entries
+
 ❌ better CLI handling
 
 ❌ --help option
