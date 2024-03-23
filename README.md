@@ -62,19 +62,17 @@ ts-tree -f='pathToComponent.tsx' -c='projectDir/coverage-summary.json' -w
 
 ✅ publish package
 
-✅ output by threshold in console
+✅ output by all files in tree threshold in console
 
 ✅ config with file entries
 
-❌ output by tree threshold in console
+✅ colorized output
 
-❌ colorized output
+❌ output by tree threshold in console
 
 ❌ better CLI handling
 
 ❌ --help option
-
-❌ fix typings in coverage processing
 
 ## Tech Debt
 
