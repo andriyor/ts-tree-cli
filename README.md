@@ -24,18 +24,29 @@ ts-tree -f='pathToComponent.tsx' -c='projectDir/coverage-summary.json' -w
 
 ## Example config
 
+`tree-cov.json`
+
 ```json
 [
   {
     "file": "src/pages/reports/index.page.tsx",
-    "threshold": 90
+    "threshold": {
+      "branches": 50,
+      "functions": 50,
+      "lines": 50,
+      "statements": 50
+    }
   },
   {
     "file": "src/pages/settings/index.page.tsx",
-    "threshold": 80
+    "threshold": {
+      "branches": 50,
+      "functions": 50,
+      "lines": 50,
+      "statements": 50
+    }
   }
 ]
-
 ```
 
 

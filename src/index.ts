@@ -100,17 +100,28 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
   for (const configItem of config) {
     const tree = getTreeByFile(configItem.file, coverage);
     const processedTree = processFlatCoverage(tree.flatTree);
-    if (configItem.threshold && processedTree.lines.pct <= configItem.threshold) {
-      console.log(pc.bold(pc.red(`Root entry ${configItem.file}: coverage threshold for lines (${configItem.threshold}%) not met: ${processedTree.lines.pct}%`)));
-    } else {
-      console.log(pc.bold(pc.green(`Root entry ${configItem.file}: coverage threshold for lines (${configItem.threshold}%) met: ${processedTree.lines.pct}%`)));
+    for (const thresholdName in configItem.threshold) {
+      // @ts-expect-error
+      if (configItem.threshold && processedTree[thresholdName].pct <= configItem.threshold[thresholdName]) {
+        console.log(pc.bold(pc.red(`Root entry ${configItem.file}: coverage threshold for ${thresholdName} (${configItem.threshold[thresholdName]}%) not met: ${processedTree.lines.pct}%`)));
+      } else {
+        console.log(
+          pc.bold(
+            pc.green(
+              `Root entry ${configItem.file}: coverage threshold for ${thresholdName} (${configItem.threshold[thresholdName]}%) met: ${processedTree.lines.pct}%`
+            )
+          )
+        );
+      }
     }
     for (const treeProperty in tree.flatTree) {
       const meta = tree.flatTree[treeProperty].meta as Coverage;
       if (meta.lines.pct <= 50) {
         console.log(
-          pc.red(`${treeProperty} ${meta.lines.pct}% lines ${meta.lines.total}/${meta.lines.covered}`)
-        )
+          pc.red(
+            `${treeProperty} ${meta.lines.pct}% lines ${meta.lines.total}/${meta.lines.covered}`
+          )
+        );
       }
     }
     console.log('');
