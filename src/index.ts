@@ -8,7 +8,7 @@ import open from 'open';
 import pc from "picocolors"
 import { getTreeByFile } from '@andriyorehov/ts-graph';
 
-import { Coverage, processCoverage, processFlatCoverage } from './helper';
+import { Coverage, FileTreeFlat, processCoverage, processFlatCoverage } from './helper';
 
 const parsed = typeFlag({
   file: {
@@ -57,7 +57,7 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
       console.log(`${treeProperty} ${meta.lines.pct}% lines ${meta.lines.total}/${meta.lines.covered}`);
     }
   }
-  const processedTree = processFlatCoverage(tree.flatTree);
+  const processedTree = processFlatCoverage(tree.flatTree as Record<string, FileTreeFlat>);
   if (parsed.flags.threshold && processedTree.lines.pct <= parsed.flags.threshold) {
     process.exit(1)
   }
@@ -99,7 +99,7 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
   const coverage = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf-8'));
   for (const configItem of config) {
     const tree = getTreeByFile(configItem.file, coverage);
-    const processedTree = processFlatCoverage(tree.flatTree);
+    const processedTree = processFlatCoverage(tree.flatTree as Record<string, FileTreeFlat>);
     for (const thresholdName in configItem.threshold) {
       // @ts-expect-error
       if (configItem.threshold && processedTree[thresholdName].pct <= configItem.threshold[thresholdName]) {

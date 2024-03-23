@@ -20,25 +20,34 @@ export type FileTreeNew = FileTree & {
   children: FileTreeNew[];
 };
 
+export type FileTreeFlat = FileTree & {
+  meta: Coverage;
+  children: FileTreeFlat[];
+};
+
 export const processCoverage = (tree: FileTree) => {
   const traverseAndBundleTree = (node: FileTreeNew) => {
     if (node.children.length) {
       for (const child of node.children) {
         if (!child['totalMeta']) {
-          // @ts-expect-error
-          child['totalMeta'] = lodash.cloneDeep(child.meta);
+          child['totalMeta'] = lodash.cloneDeep(child.meta) as Coverage;
         }
         traverseAndBundleTree(child);
         for (const type of ['lines', 'functions', 'statements', 'branches']) {
           for (const prop of ['total', 'covered', 'skipped']) {
-            // @ts-expect-error
-            node['totalMeta'][type][prop] = node['totalMeta'][type][prop] + child['totalMeta'][type][prop];
+            node.totalMeta[type as keyof Coverage][prop as keyof CoverageInfo] =
+              node.totalMeta[type as keyof Coverage][prop as keyof CoverageInfo] +
+              child.totalMeta[type as keyof Coverage][prop as keyof CoverageInfo];
           }
         }
 
         for (const type of ['lines', 'functions', 'statements', 'branches']) {
-          // @ts-expect-error
-          node['totalMeta'][type].pct = Number(((node['totalMeta'][type].covered * 100) / node['totalMeta'][type].total).toFixed(2));
+          node['totalMeta'][type as keyof Coverage].pct = Number(
+            (
+              (node.totalMeta[type as keyof Coverage].covered * 100) /
+              node.totalMeta[type as keyof Coverage].total
+            ).toFixed(2)
+          );
         }
       }
     }
@@ -46,11 +55,12 @@ export const processCoverage = (tree: FileTree) => {
 
   // @ts-expect-error
   tree['totalMeta'] = lodash.cloneDeep(tree.meta);
+  traverseAndBundleTree(tree as FileTreeNew);
   return tree;
 };
 
 
-export const processFlatCoverage = (flatTree: Record<string, FileTree>) => {
+export const processFlatCoverage = (flatTree: Record<string, FileTreeFlat>) => {
   const emptyInfo: CoverageInfo = {
     total: 0,
     covered: 0,
@@ -65,16 +75,23 @@ export const processFlatCoverage = (flatTree: Record<string, FileTree>) => {
   }
 
   for (const flatTreeProperty in flatTree) {
-    for (const type of ['lines', 'functions', 'statements', 'branches']) {
-      for (const prop of ['total', 'covered', 'skipped']) {
-        // @ts-expect-error
-        totalCoverage[type][prop] = totalCoverage[type][prop] + flatTree[flatTreeProperty]['meta'][type][prop];
+    for (const type in totalCoverage) {
+      for (const prop in emptyInfo) {
+        totalCoverage[type as keyof Coverage][prop as keyof CoverageInfo] =
+          totalCoverage[type as keyof Coverage][prop as keyof CoverageInfo] +
+          flatTree[flatTreeProperty as keyof typeof flatTree]['meta'][type as keyof Coverage][
+            prop as keyof CoverageInfo
+          ];
       }
     }
   }
-  for (const type of ['lines', 'functions', 'statements', 'branches']) {
-    // @ts-expect-error
-    totalCoverage[type].pct = Number(((totalCoverage[type].covered * 100) / totalCoverage[type].total).toFixed(2));
+  for (const type in totalCoverage) {
+    totalCoverage[type as keyof Coverage].pct = Number(
+      (
+        (totalCoverage[type as keyof Coverage].covered * 100) /
+        totalCoverage[type as keyof Coverage].total
+      ).toFixed(2)
+    );
   }
 
   return totalCoverage;
