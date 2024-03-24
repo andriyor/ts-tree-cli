@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@andriyorehov/ts-graph':
-    specifier: ^1.0.0
-    version: 1.0.0
+    specifier: ^1.0.1
+    version: 1.0.1
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
@@ -37,12 +37,11 @@ devDependencies:
 
 packages:
 
-  /@andriyorehov/ts-graph@1.0.0:
-    resolution: {integrity: sha512-pb0tNXIEMATuTT28uL9XeGPMxNek99+ZFZeN0s39bJYJt8F7qsqPvhlHJ9DDXjfPGS7FPYBFRAvRVhM5SR3kdw==}
+  /@andriyorehov/ts-graph@1.0.1:
+    resolution: {integrity: sha512-jqHWElTIbLnnjdGMGpLW0vLgQp08lDYV/JmSvNX7COQnRq+4Mg48PHqBN/tZ0urnMMfGHXzKWVhE7c1m3fkQYA==}
     dependencies:
       find-up: 5.0.0
       ts-morph: 21.0.1
-      type-flag: 3.0.0
     dev: false
 
   /@nodelib/fs.scandir@2.1.5:
@@ -294,6 +293,7 @@ packages:
 
   /type-flag@3.0.0:
     resolution: {integrity: sha512-3YaYwMseXCAhBB14RXW5cRQfJQlEknS6i4C8fCfeUdS3ihG9EdccdR9kt3vP73ZdeTGmPb4bZtkDn5XMIn1DLA==}
+    dev: true
 
   /typescript@5.4.3:
     resolution: {integrity: sha512-KrPd3PKaCLr78MalgiwJnA25Nm8HAmdwN3mYUYZgG/wizIo9EainNVQI9/yDavtVFRN2h3k8uf3GLHuhDMgEHg==}

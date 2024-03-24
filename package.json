@@ -1,6 +1,6 @@
 {
   "name": "@andriyorehov/ts-tree-cli",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "",
   "main": "build/index.js",
   "bin": {
@@ -14,7 +14,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@andriyorehov/ts-graph": "^1.0.0",
+    "@andriyorehov/ts-graph": "^1.0.1",
     "lodash": "^4.17.21",
     "lz-string": "^1.5.0",
     "open": "^8.4.2",

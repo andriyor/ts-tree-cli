@@ -68,7 +68,9 @@ ts-tree -f='pathToComponent.tsx' -c='projectDir/coverage-summary.json' -w
 
 ✅ colorized output
 
-❌ output by tree threshold in console
+❌ auto bump threshold
+
+❌ output by accamulated tree threshold in console
 
 ❌ better CLI handling
 
@@ -77,3 +79,5 @@ ts-tree -f='pathToComponent.tsx' -c='projectDir/coverage-summary.json' -w
 ## Tech Debt
 
 - update `open` package to latest version with ESM
+
+- try [JLarky on X: "fun fact: while chrome URL limit is 2,083 characters the hash part of URL is not limited by this number, that's why I was able to put 100kb of code into typescript playground :)" / X](https://twitter.com/jlarky/status/1771603877676142666)

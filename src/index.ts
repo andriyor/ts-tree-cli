@@ -3,9 +3,9 @@
 import fs from 'node:fs';
 
 import { typeFlag } from 'type-flag';
-import lzString from "lz-string";
+import lzString from 'lz-string';
 import open from 'open';
-import pc from "picocolors"
+import pc from 'picocolors';
 import { getTreeByFile } from '@andriyorehov/ts-graph';
 
 import { Coverage, FileTreeFlat, processCoverage, processFlatCoverage } from './helper';
@@ -35,16 +35,27 @@ const parsed = typeFlag({
     type: Boolean,
   },
   threshold: {
-    type: Number
+    type: Number,
   },
 });
 
+type ThresholdPercentage = {
+  lines: number;
+  functions: number;
+  statements: number;
+  branches: number;
+};
+
+type Config = {
+  file: string;
+  threshold?: ThresholdPercentage;
+}[];
 
 const getURlFromTree = (tree: unknown) => {
   const stringiFiedTree = JSON.stringify(tree);
   const compressedJson = lzString.compressToEncodedURIComponent(stringiFiedTree);
   return `https://coverage-tree.vercel.app/?json=${compressedJson}`;
-}
+};
 
 // TODO: better args handling
 // handle coverage and threshold like jest
@@ -59,9 +70,14 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
   }
   const processedTree = processFlatCoverage(tree.flatTree as Record<string, FileTreeFlat>);
   if (parsed.flags.threshold && processedTree.lines.pct <= parsed.flags.threshold) {
-    process.exit(1)
+    process.exit(1);
   }
-} else if (parsed.flags.file && parsed.flags.outputFile && parsed.flags.coverageFile && parsed.flags.process) {
+} else if (
+  parsed.flags.file &&
+  parsed.flags.outputFile &&
+  parsed.flags.coverageFile &&
+  parsed.flags.process
+) {
   const coverage = JSON.parse(fs.readFileSync(parsed.flags.coverageFile, 'utf-8'));
   const tree = getTreeByFile(parsed.flags.file, coverage).fileTree;
   const processedTree = processCoverage(tree);
@@ -70,7 +86,7 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
   const coverage = JSON.parse(fs.readFileSync(parsed.flags.coverageFile, 'utf-8'));
   const tree = getTreeByFile(parsed.flags.file, coverage).fileTree;
   const processedTree = processCoverage(tree);
-  console.dir(processedTree, { depth: null })
+  console.dir(processedTree, { depth: null });
 } else if (parsed.flags.file && parsed.flags.outputFile && parsed.flags.coverageFile) {
   const coverage = JSON.parse(fs.readFileSync(parsed.flags.coverageFile, 'utf-8'));
   const tree = getTreeByFile(parsed.flags.file, coverage).fileTree;
@@ -95,32 +111,42 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
   const tree = getTreeByFile(parsed.flags.file).flatTree;
   console.dir(tree, { depth: null });
 } else {
-  const config = JSON.parse(fs.readFileSync('tree-cov.json', 'utf-8'))
+  const config: Config = JSON.parse(fs.readFileSync('tree-cov.json', 'utf-8'));
   const coverage = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf-8'));
   for (const configItem of config) {
     const tree = getTreeByFile(configItem.file, coverage);
     const processedTree = processFlatCoverage(tree.flatTree as Record<string, FileTreeFlat>);
-    for (const thresholdName in configItem.threshold) {
-      // @ts-expect-error
-      if (configItem.threshold && processedTree[thresholdName].pct <= configItem.threshold[thresholdName]) {
-        console.log(pc.bold(pc.red(`Root entry ${configItem.file}: coverage threshold for ${thresholdName} (${configItem.threshold[thresholdName]}%) not met: ${processedTree.lines.pct}%`)));
-      } else {
-        console.log(
-          pc.bold(
-            pc.green(
-              `Root entry ${configItem.file}: coverage threshold for ${thresholdName} (${configItem.threshold[thresholdName]}%) met: ${processedTree.lines.pct}%`
+
+    if (configItem.threshold) {
+      for (const thresholdName in configItem.threshold) {
+        const configThreshold = configItem.threshold[thresholdName as keyof ThresholdPercentage];
+        if (processedTree[thresholdName as keyof Coverage].pct <= configThreshold) {
+          console.log(
+            pc.bold(
+              pc.red(
+                `Root entry ${configItem.file}: coverage threshold for ${thresholdName} (${configThreshold}%) not met: ${processedTree.lines.pct}%`
+              )
             )
-          )
-        );
+          );
+        } else {
+          console.log(
+            pc.bold(
+              pc.green(
+                `Root entry ${configItem.file}: coverage threshold for ${thresholdName} (${configThreshold}%) met: ${processedTree.lines.pct}%`
+              )
+            )
+          );
+        }
       }
+    } else {
+      console.log(pc.bold(pc.yellow(`Root entry ${configItem.file}:`)));
     }
+
     for (const treeProperty in tree.flatTree) {
       const meta = tree.flatTree[treeProperty].meta as Coverage;
       if (meta.lines.pct <= 50) {
         console.log(
-          pc.red(
-            `${treeProperty} ${meta.lines.pct}% lines ${meta.lines.total}/${meta.lines.covered}`
-          )
+          pc.red(`${treeProperty} ${meta.lines.pct}% lines ${meta.lines.total}/${meta.lines.covered}`)
         );
       }
     }
