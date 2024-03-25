@@ -146,7 +146,7 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
       const meta = tree.flatTree[treeProperty].meta as Coverage;
       if (meta.lines.pct <= 50) {
         console.log(
-          pc.red(`${treeProperty} ${meta.lines.pct}% lines ${meta.lines.total}/${meta.lines.covered}`)
+          pc.red(`${treeProperty} ${meta.lines.pct}% lines ${meta.lines.covered}/${meta.lines.total}`)
         );
       }
     }

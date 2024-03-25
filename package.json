@@ -1,6 +1,6 @@
 {
   "name": "@andriyorehov/ts-tree-cli",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "",
   "main": "build/index.js",
   "bin": {
