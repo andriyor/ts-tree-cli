@@ -20,6 +20,9 @@ dependencies:
   picocolors:
     specifier: ^1.0.0
     version: 1.0.0
+  type-flag:
+    specifier: ^3.0.0
+    version: 3.0.0
 
 devDependencies:
   '@types/lodash':
@@ -28,9 +31,6 @@ devDependencies:
   '@types/node':
     specifier: ^20.11.30
     version: 20.11.30
-  type-flag:
-    specifier: ^3.0.0
-    version: 3.0.0
   typescript:
     specifier: ^5.4.3
     version: 5.4.3
@@ -293,7 +293,7 @@ packages:
 
   /type-flag@3.0.0:
     resolution: {integrity: sha512-3YaYwMseXCAhBB14RXW5cRQfJQlEknS6i4C8fCfeUdS3ihG9EdccdR9kt3vP73ZdeTGmPb4bZtkDn5XMIn1DLA==}
-    dev: true
+    dev: false
 
   /typescript@5.4.3:
     resolution: {integrity: sha512-KrPd3PKaCLr78MalgiwJnA25Nm8HAmdwN3mYUYZgG/wizIo9EainNVQI9/yDavtVFRN2h3k8uf3GLHuhDMgEHg==}

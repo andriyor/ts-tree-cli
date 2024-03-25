@@ -1,6 +1,6 @@
 {
   "name": "@andriyorehov/ts-tree-cli",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "",
   "main": "build/index.js",
   "bin": {
@@ -18,12 +18,12 @@
     "lodash": "^4.17.21",
     "lz-string": "^1.5.0",
     "open": "^8.4.2",
-    "picocolors": "^1.0.0"
+    "picocolors": "^1.0.0",
+    "type-flag": "^3.0.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.0",
     "@types/node": "^20.11.30",
-    "type-flag": "^3.0.0",
     "typescript": "^5.4.3"
   },
   "publishConfig": {
