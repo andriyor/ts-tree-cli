@@ -37,6 +37,13 @@ const parsed = typeFlag({
   threshold: {
     type: Number
   },
+  tolerance: {
+    type: Number,
+    default: 0
+  },
+  bump: {
+    type: Boolean
+  },
   bail: {
     type: Boolean,
     alias: 'b'
@@ -125,11 +132,11 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
     if (configItem.threshold) {
       for (const thresholdName in configItem.threshold) {
         const configThreshold = configItem.threshold[thresholdName as keyof ThresholdPercentage];
-        if (processedTree[thresholdName as keyof Coverage].pct <= configThreshold) {
+        if (processedTree[thresholdName as keyof Coverage].pct < configThreshold) {
           console.log(
             pc.bold(
               pc.red(
-                `Root entry ${configItem.file}: coverage threshold for ${thresholdName} (${configThreshold}%) not met: ${processedTree.lines.pct}%`
+                `Root entry ${configItem.file}: coverage threshold for ${thresholdName} (${configThreshold}%) not met: ${processedTree[thresholdName as keyof Coverage].pct}%`
               )
             )
           );
@@ -138,10 +145,11 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
           console.log(
             pc.bold(
               pc.green(
-                `Root entry ${configItem.file}: coverage threshold for ${thresholdName} (${configThreshold}%) met: ${processedTree.lines.pct}%`
+                `Root entry ${configItem.file}: coverage threshold for ${thresholdName} (${configThreshold}%) met: ${processedTree[thresholdName as keyof Coverage].pct}%`
               )
             )
           );
+          configItem.threshold[thresholdName as keyof ThresholdPercentage] = processedTree[thresholdName as keyof Coverage].pct - parsed.flags.tolerance;
         }
       }
     } else {
@@ -158,13 +166,16 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
     }
     console.log('');
 
-    if (parsed.flags.bail) {
+    if (parsed.flags.bail && failedCount) {
       process.exit(1);
     }
+  }
+
+  if (parsed.flags.bump) {
+    fs.writeFileSync('tree-cov.json', `${JSON.stringify(config, null, 2)}\n`, 'utf-8');
   }
 
   if (failedCount > 0) {
     process.exit(1);
   }
-
 }

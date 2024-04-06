@@ -68,9 +68,11 @@ ts-tree -f='pathToComponent.tsx' -c='projectDir/coverage-summary.json' -w
 
 ✅ colorized output
 
-❌ auto bump threshold
+✅ auto bump threshold
 
-❌ output by accamulated tree threshold in console
+✅ exit code on when threshold not met
+
+❌ output by accumulated tree threshold in console?
 
 ❌ better CLI handling
 
