@@ -65,7 +65,7 @@ type Config = {
 const getURlFromTree = (tree: unknown) => {
   const stringiFiedTree = JSON.stringify(tree);
   const compressedJson = lzString.compressToEncodedURIComponent(stringiFiedTree);
-  return `https://coverage-tree.vercel.app/?json=${compressedJson}`;
+  return `https://coverage-tree.vercel.app/#${compressedJson}`;
 };
 
 // TODO: better args handling
@@ -103,11 +103,11 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
   const tree = getTreeByFile(parsed.flags.file, coverage).fileTree;
   fs.writeFileSync(parsed.flags.outputFile, JSON.stringify(tree, null, 2), 'utf-8');
 } else if (parsed.flags.file && parsed.flags.outputFile) {
-  const tree = getTreeByFile(parsed.flags.file).flatTree;
+  const tree = getTreeByFile(parsed.flags.file).fileTree;
   fs.writeFileSync(parsed.flags.outputFile, JSON.stringify(tree, null, 2), 'utf-8');
 } else if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.web) {
   const coverage = JSON.parse(fs.readFileSync(parsed.flags.coverageFile, 'utf-8'));
-  const tree = getTreeByFile(parsed.flags.file, coverage).flatTree;
+  const tree = getTreeByFile(parsed.flags.file, coverage).fileTree;
   const url = getURlFromTree(tree);
   open(url);
 } else if (parsed.flags.file && parsed.flags.coverageFile) {
@@ -115,11 +115,11 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
   const tree = getTreeByFile(parsed.flags.file, coverage).fileTree;
   console.dir(tree, { depth: null });
 } else if (parsed.flags.file && parsed.flags.web) {
-  const tree = getTreeByFile(parsed.flags.file).flatTree;
+  const tree = getTreeByFile(parsed.flags.file).fileTree;
   const url = getURlFromTree(tree);
   open(url);
 } else if (parsed.flags.file) {
-  const tree = getTreeByFile(parsed.flags.file).flatTree;
+  const tree = getTreeByFile(parsed.flags.file).fileTree;
   console.dir(tree, { depth: null });
 } else {
   const config: Config = JSON.parse(fs.readFileSync('tree-cov.json', 'utf-8'));
