@@ -13,30 +13,34 @@ import { Coverage, FileTreeFlat, processCoverage, processFlatCoverage } from './
 const parsed = typeFlag({
   file: {
     type: String,
-    alias: 'f',
+    alias: 'f'
   },
   outputFile: {
     type: String,
-    alias: 'o',
+    alias: 'o'
   },
   web: {
     type: Boolean,
-    alias: 'w',
+    alias: 'w'
   },
   coverageFile: {
     type: String,
-    alias: 'c',
+    alias: 'c'
   },
   process: {
     type: Boolean,
-    alias: 'p',
+    alias: 'p'
   },
   processFlat: {
-    type: Boolean,
+    type: Boolean
   },
   threshold: {
-    type: Number,
+    type: Number
   },
+  bail: {
+    type: Boolean,
+    alias: 'b'
+  }
 });
 
 type ThresholdPercentage = {
@@ -113,6 +117,7 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
 } else {
   const config: Config = JSON.parse(fs.readFileSync('tree-cov.json', 'utf-8'));
   const coverage = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf-8'));
+  let failedCount = 0;
   for (const configItem of config) {
     const tree = getTreeByFile(configItem.file, coverage);
     const processedTree = processFlatCoverage(tree.flatTree as Record<string, FileTreeFlat>);
@@ -128,6 +133,7 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
               )
             )
           );
+          failedCount += 1;
         } else {
           console.log(
             pc.bold(
@@ -151,5 +157,14 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
       }
     }
     console.log('');
+
+    if (parsed.flags.bail) {
+      process.exit(1);
+    }
   }
+
+  if (failedCount > 0) {
+    process.exit(1);
+  }
+
 }
