@@ -1,6 +1,6 @@
 {
   "name": "@andriyorehov/ts-tree-cli",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "",
   "main": "build/index.js",
   "bin": {
@@ -14,7 +14,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@andriyorehov/ts-graph": "^1.0.1",
+    "@andriyorehov/ts-graph": "^1.0.2",
     "lodash": "^4.17.21",
     "lz-string": "^1.5.0",
     "open": "^8.4.2",
@@ -23,8 +23,8 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.17.0",
-    "@types/node": "^20.11.30",
-    "typescript": "^5.4.3"
+    "@types/node": "^20.12.7",
+    "typescript": "^5.4.5"
   },
   "publishConfig": {
     "access": "public"

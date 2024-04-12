@@ -2,6 +2,15 @@
 
 This CLI uses [ts-tree](https://github.com/andriyor/ts-tree) to get file tree and [coverage-tree](https://github.com/andriyor/coverage-tree-next) to show result on web
 
+## Motivation
+
+Using global threshold in large monolith which managed by multiple teams threshold coverage is not so precise and clear.
+For instance, while a global threshold may be set at 70 percent, certain pages might not be covered at all.  This lack of coverage not noticeable since we have a lot of lines of codes in other pages. Additionally, different pages may have different requirement for coverage depending on criticality.
+
+In Jest its possible to specify thresholds by glob pattern but its not what we want sicne page code can be imported from different folders.
+
+So I decided to build tool that generates a coverage report per entry file based on all files which imported in this page.
+
 ## Installation
 
 ```shell
@@ -81,5 +90,3 @@ ts-tree -f='pathToComponent.tsx' -c='projectDir/coverage-summary.json' -w
 ## Tech Debt
 
 - update `open` package to latest version with ESM
-
-- try [JLarky on X: "fun fact: while chrome URL limit is 2,083 characters the hash part of URL is not limited by this number, that's why I was able to put 100kb of code into typescript playground :)" / X](https://twitter.com/jlarky/status/1771603877676142666)
