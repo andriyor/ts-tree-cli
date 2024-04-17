@@ -4,12 +4,13 @@ This CLI uses [ts-tree](https://github.com/andriyor/ts-tree) to get file tree an
 
 ## Motivation
 
-Using global threshold in large monolith which managed by multiple teams threshold coverage is not so precise and clear.
-For instance, while a global threshold may be set at 70 percent, certain pages might not be covered at all.  This lack of coverage not noticeable since we have a lot of lines of codes in other pages. Additionally, different pages may have different requirement for coverage depending on criticality.
+Using global thresholds in a large monolith, which is managed by multiple teams, threshold coverage is not so precise and clear. 
+For instance, while a global threshold may be set at 70 percent, certain pages might not be covered at all. 
+This lack of coverage is not noticeable since we have a lot of lines of code on other pages. Additionally, different pages may have different requirements for coverage depending on criticality.
 
-In Jest its possible to specify thresholds by glob pattern but its not what we want sicne page code can be imported from different folders.
+In Jest, it's possible to specify thresholds by glob pattern, but it's not what we want since page code can be imported from different folders.
 
-So I decided to build tool that generates a coverage report per entry file based on all files which imported in this page.
+So I decided to build a tool that generates a coverage report per entry file based on all files which imported into this page.
 
 ## Installation
 
