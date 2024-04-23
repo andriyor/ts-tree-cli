@@ -185,7 +185,7 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
     // bump team threshold
     for (const teamThreshold in teamConfig.threshold) {
       if (!teamFailsCount && totalByTeam[teamThreshold as keyof ThresholdPercentage] / teamConfig.owns.length > teamConfig.threshold[teamThreshold as keyof Coverage]) {
-        teamConfig.threshold[teamThreshold as keyof ThresholdPercentage] = totalByTeam[teamThreshold as keyof ThresholdPercentage] / teamConfig.owns.length;
+        teamConfig.threshold[teamThreshold as keyof ThresholdPercentage] = Number((totalByTeam[teamThreshold as keyof ThresholdPercentage] / teamConfig.owns.length).toFixed(2));
       }
     }
 
