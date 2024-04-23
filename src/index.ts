@@ -57,9 +57,16 @@ type ThresholdPercentage = {
   branches: number;
 };
 
-type Config = {
+type FileEntry = {
+  label: string;
   file: string;
   threshold?: ThresholdPercentage;
+}
+
+type Config = {
+  team: string,
+  threshold: ThresholdPercentage;
+  owns: FileEntry[]
 }[];
 
 const getURlFromTree = (tree: unknown) => {
@@ -124,49 +131,65 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
 } else {
   const config: Config = JSON.parse(fs.readFileSync('tree-cov.json', 'utf-8'));
   const coverage = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf-8'));
-  let failedCount = 0;
-  for (const configItem of config) {
-    const tree = getTreeByFile(configItem.file, coverage);
-    const processedTree = processFlatCoverage(tree.flatTree as Record<string, FileTreeFlat>);
+  let totalFailsCount = 0;
+  for (const teamConfig of config) {
+    let teamFailsCount = 0;
+    const totalByTeam = {} as ThresholdPercentage;
+    for (const teamConfigElement of teamConfig.owns) {
+      const tree = getTreeByFile(teamConfigElement.file, coverage);
+      const processedTree = processFlatCoverage(tree.flatTree as Record<string, FileTreeFlat>);
 
-    if (configItem.threshold) {
-      for (const thresholdName in configItem.threshold) {
-        const configThreshold = configItem.threshold[thresholdName as keyof ThresholdPercentage];
-        if (processedTree[thresholdName as keyof Coverage].pct < configThreshold) {
-          console.log(
-            pc.bold(
-              pc.red(
-                `Root entry ${configItem.file}: coverage threshold for ${thresholdName} (${configThreshold}%) not met: ${processedTree[thresholdName as keyof Coverage].pct}%`
+      const header = `${teamConfigElement.label} owned by ${teamConfig.team}`;
+      if (teamConfigElement.threshold) {
+        for (const thresholdName in teamConfigElement.threshold) {
+          const configThreshold = teamConfigElement.threshold[thresholdName as keyof ThresholdPercentage];
+          if (processedTree[thresholdName as keyof Coverage].pct < configThreshold) {
+            console.log(
+              pc.bold(
+                pc.red(
+                  `${header}: coverage threshold for ${thresholdName} (${configThreshold}%) not met: ${processedTree[thresholdName as keyof Coverage].pct}%`
+                )
               )
-            )
-          );
-          failedCount += 1;
-        } else {
-          console.log(
-            pc.bold(
-              pc.green(
-                `Root entry ${configItem.file}: coverage threshold for ${thresholdName} (${configThreshold}%) met: ${processedTree[thresholdName as keyof Coverage].pct}%`
+            );
+            teamFailsCount += 1;
+            totalFailsCount += 1;
+          } else {
+            console.log(
+              pc.bold(
+                pc.green(
+                  `${header}: coverage threshold for ${thresholdName} (${configThreshold}%) met: ${processedTree[thresholdName as keyof Coverage].pct}%`
+                )
               )
-            )
+            );
+            const increased = processedTree[thresholdName as keyof Coverage].pct - parsed.flags.tolerance;
+            teamConfigElement.threshold[thresholdName as keyof ThresholdPercentage] = increased;
+            totalByTeam[thresholdName as keyof ThresholdPercentage] = increased + (totalByTeam[thresholdName as keyof ThresholdPercentage] || 0);
+          }
+        }
+      } else {
+        console.log(pc.bold(pc.yellow(`${header}:`)));
+      }
+
+      // report files with less than 50% coverage
+      for (const treeProperty in tree.flatTree) {
+        const meta = tree.flatTree[treeProperty].meta as Coverage;
+        if (meta.lines.pct <= 50) {
+          console.log(
+            pc.red(`${treeProperty} ${meta.lines.pct}% lines ${meta.lines.covered}/${meta.lines.total}`)
           );
-          configItem.threshold[thresholdName as keyof ThresholdPercentage] = processedTree[thresholdName as keyof Coverage].pct - parsed.flags.tolerance;
         }
       }
-    } else {
-      console.log(pc.bold(pc.yellow(`Root entry ${configItem.file}:`)));
+      console.log('');
     }
 
-    for (const treeProperty in tree.flatTree) {
-      const meta = tree.flatTree[treeProperty].meta as Coverage;
-      if (meta.lines.pct <= 50) {
-        console.log(
-          pc.red(`${treeProperty} ${meta.lines.pct}% lines ${meta.lines.covered}/${meta.lines.total}`)
-        );
+    // bump team threshold
+    for (const teamThreshold in teamConfig.threshold) {
+      if (!teamFailsCount && totalByTeam[teamThreshold as keyof ThresholdPercentage] / teamConfig.owns.length > teamConfig.threshold[teamThreshold as keyof Coverage]) {
+        teamConfig.threshold[teamThreshold as keyof ThresholdPercentage] = totalByTeam[teamThreshold as keyof ThresholdPercentage] / teamConfig.owns.length;
       }
     }
-    console.log('');
 
-    if (parsed.flags.bail && failedCount) {
+    if (parsed.flags.bail && totalFailsCount) {
       process.exit(1);
     }
   }
@@ -175,7 +198,7 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
     fs.writeFileSync('tree-cov.json', `${JSON.stringify(config, null, 2)}\n`, 'utf-8');
   }
 
-  if (failedCount > 0) {
+  if (totalFailsCount > 0) {
     process.exit(1);
   }
 }
