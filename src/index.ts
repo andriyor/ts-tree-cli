@@ -47,6 +47,10 @@ const parsed = typeFlag({
   bail: {
     type: Boolean,
     alias: 'b'
+  },
+  margin: {
+    type: Number,
+    alias: 'm'
   }
 });
 
@@ -162,7 +166,9 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
               )
             );
             const increased = processedTree[thresholdName as keyof Coverage].pct - parsed.flags.tolerance;
-            teamConfigElement.threshold[thresholdName as keyof ThresholdPercentage] = increased;
+            if (increased - teamConfigElement.threshold[thresholdName as keyof ThresholdPercentage] >= (parsed.flags.margin || 0)) {
+              teamConfigElement.threshold[thresholdName as keyof ThresholdPercentage] = increased;
+            }
             totalByTeam[thresholdName as keyof ThresholdPercentage] = increased + (totalByTeam[thresholdName as keyof ThresholdPercentage] || 0);
           }
         }
@@ -173,6 +179,11 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
       // report files with less than 50% coverage
       for (const treeProperty in tree.flatTree) {
         const meta = tree.flatTree[treeProperty].meta as Coverage;
+        if (meta.lines.pct >= 50 && meta.lines.pct <= 80) {
+          console.log(
+            pc.yellow(`${treeProperty} ${meta.lines.pct}% lines ${meta.lines.covered}/${meta.lines.total}`)
+          );
+        }
         if (meta.lines.pct <= 50) {
           console.log(
             pc.red(`${treeProperty} ${meta.lines.pct}% lines ${meta.lines.covered}/${meta.lines.total}`)
@@ -184,7 +195,7 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
 
     // bump team threshold
     for (const teamThreshold in teamConfig.threshold) {
-      if (!teamFailsCount && totalByTeam[teamThreshold as keyof ThresholdPercentage] / teamConfig.owns.length > teamConfig.threshold[teamThreshold as keyof Coverage]) {
+      if (!teamFailsCount && (totalByTeam[teamThreshold as keyof ThresholdPercentage] / teamConfig.owns.length) - teamConfig.threshold[teamThreshold as keyof Coverage] >= (parsed.flags.margin || 0)) {
         teamConfig.threshold[teamThreshold as keyof ThresholdPercentage] = Number((totalByTeam[teamThreshold as keyof ThresholdPercentage] / teamConfig.owns.length).toFixed(2));
       }
     }
