@@ -108,3 +108,4 @@ ts-tree -f='pathToComponent.tsx' -c='projectDir/coverage-summary.json' -w
 ## Tech Debt
 
 - update `open` package to latest version with ESM
+- use cache between files or use workers to increase performance
