@@ -133,8 +133,13 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
   const tree = getTreeByFile(parsed.flags.file).fileTree;
   console.dir(tree, { depth: null });
 } else {
+  const coverageFile = 'coverage/coverage-summary.json';
+  if (!fs.existsSync(coverageFile)) {
+    console.log(`You need to enable json-summary reporting and run all tests before running this report`);
+    process.exit()
+  }
   const config: Config = JSON.parse(fs.readFileSync('tree-cov.json', 'utf-8'));
-  const coverage = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf-8'));
+  const coverage = JSON.parse(fs.readFileSync(coverageFile, 'utf-8'));
   let totalFailsCount = 0;
   for (const teamConfig of config) {
     let teamFailsCount = 0;
