@@ -38,7 +38,13 @@ KB [URL_TOO_LONG](https://vercel.com/docs/errors/URL_TOO_LONG))
 ts-tree -f='pathToComponent.tsx' -c='projectDir/coverage-summary.json' -w
 ```
 
-## Example config
+By using team based config
+
+```shell
+ts-tree --bump --tolerance=1 --margin='1'
+```
+
+### Example config
 
 `tree-cov.json`
 
@@ -47,7 +53,7 @@ ts-tree -f='pathToComponent.tsx' -c='projectDir/coverage-summary.json' -w
   {
     "team": "teamName",
     "threshold": {
-      "lines": 70.09
+      "lines": 50.09
     },
     "owns": [
       {
