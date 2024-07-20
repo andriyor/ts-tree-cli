@@ -115,3 +115,8 @@ ts-tree --bump --tolerance=1 --margin='1'
 
 - update `open` package to latest version with ESM
 - use cache between files or use workers to increase performance
+
+
+## Related
+
+[[Feature]: Isolated coverage reports · Issue #13876 · jestjs/jest](https://github.com/jestjs/jest/issues/13876)
