@@ -6,7 +6,7 @@ import { typeFlag } from 'type-flag';
 import lzString from 'lz-string';
 import open from 'open';
 import pc from 'picocolors';
-import { getTreeByFile } from '@andriyorehov/ts-graph';
+import { getTreeByFile, getGraphByFile, findCascadingDeletes } from '@andriyorehov/ts-graph';
 
 import { Coverage, FileTreeFlat, processCoverage, processFlatCoverage } from './helper';
 
@@ -26,6 +26,14 @@ const parsed = typeFlag({
   coverageFile: {
     type: String,
     alias: 'c'
+  },
+  graph: {
+    type: Boolean,
+    alias: 'g'
+  },
+  deleteFile: {
+    type: String,
+    alias: 'd'
   },
   process: {
     type: Boolean,
@@ -113,6 +121,13 @@ if (parsed.flags.file && parsed.flags.coverageFile && parsed.flags.processFlat) 
   const coverage = JSON.parse(fs.readFileSync(parsed.flags.coverageFile, 'utf-8'));
   const tree = getTreeByFile(parsed.flags.file, coverage).fileTree;
   fs.writeFileSync(parsed.flags.outputFile, JSON.stringify(tree, null, 2), 'utf-8');
+} else if (parsed.flags.file && parsed.flags.deleteFile) {
+  const graph = getGraphByFile(parsed.flags.file);
+  const filesToDelete = findCascadingDeletes(graph, parsed.flags.deleteFile);
+  filesToDelete.forEach(file => fs.unlinkSync(file));
+} else if (parsed.flags.file && parsed.flags.outputFile && parsed.flags.graph) {
+  const graph = getGraphByFile(parsed.flags.file);
+  fs.writeFileSync(parsed.flags.outputFile, JSON.stringify(graph, null, 2), 'utf-8');
 } else if (parsed.flags.file && parsed.flags.outputFile) {
   const tree = getTreeByFile(parsed.flags.file).fileTree;
   fs.writeFileSync(parsed.flags.outputFile, JSON.stringify(tree, null, 2), 'utf-8');

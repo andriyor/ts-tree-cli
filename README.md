@@ -105,6 +105,10 @@ ts-tree --bump --tolerance=1 --margin='1'
 
 ✅ threshold per team
 
+- [ ] warn about a large file not opened in browser
+- [x] cascading delete
+- [x] graph output
+
 ❌ output by accumulated tree threshold in console?
 
 ❌ better CLI handling
